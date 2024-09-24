@@ -4,13 +4,17 @@ const Form = ({ setMovies }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const fetchMovies = async (query) => {
-    const apiKey = 'a631def9'; // Replace with your actual TMDb API key
-    const url = `http://www.omdbapi.com/?i=tt3896198&apikey=a631def9`;
+    const apiKey = 'a631def9'; // Your OMDb API key
+    const url = `http://www.omdbapi.com/?s=${query}&apikey=${apiKey}`;
     
     try {
       const response = await fetch(url);
       const data = await response.json();
-      setMovies(data.results || []);
+      if (data.Response === "True") {
+        setMovies(data.Search || []);
+      } else {
+        setMovies([]); // Handle no results found
+      }
     } catch (error) {
       console.error('Error fetching movies:', error);
     }
